@@ -1,0 +1,73 @@
+# =============================================================================
+# SCA_Pro_PQC: Full Yosys synthesis — zero blackboxes
+# =============================================================================
+# Strategy:
+#   1. Load slang plugin for SystemVerilog interface support
+#   2. Read Verilog peripheral IPs (EF_PSRAM, EF_UART, etc.) via read_verilog
+#   3. Read greyhound SoC core via read_slang (handles SV interfaces/structs)
+#   4. Read cw305_usb_reg_fe + SCA_PQC RTL via read_verilog AFTER slang
+#      (avoids slang's undriven pass choking on sync processes)
+#   5. synth_xilinx with -flatten -nodsp
+# =============================================================================
+
+plugin -i slang
+
+# --- Phase 1: Verilog peripheral IPs ---
+# These are plain Verilog, no SV interfaces needed
+read_verilog -sv greyhound/ip/EF_QSPI_XIP_CTRL.v greyhound/ip/DMC.v
+read_verilog -sv greyhound/ip/EF_QSPI_XIP_CTRL_AHBL.v
+read_verilog -sv greyhound/ip/EF_PSRAM_CTRL.v greyhound/ip/EF_PSRAM_CTRL_AHBL.v
+read_verilog -sv greyhound/ip/EF_UART.v greyhound/ip/EF_UART_AHBL.v
+read_verilog -sv greyhound/ip/ef_util_lib.v
+
+# IHP clock gate stub (passthrough on FPGA)
+read_verilog build/fpga_stubs.v
+
+# tc_sram — BRAM-inferred SRAM replacement
+read_verilog -sv greyhound/tc_sram_openflow.sv
+
+# --- Phase 2: Greyhound SoC core via slang ---
+# CV32E40X + OBI infrastructure + SoC glue use SV interfaces
+# read_slang handles: packages, interfaces, structs, modports
+read_slang --ignore-assertions \
+  -I greyhound/include \
+  -I /media/dillibabu/PortableSSD/PQC/greyhound-ihp-v2/ip/obi/include \
+  -I /media/dillibabu/PortableSSD/PQC/greyhound-ihp-v2/ip/common_cells/include \
+  -D SYNTHESIS \
+  greyhound/src/soc_pkg.sv greyhound/src/cf_math_pkg.sv \
+  greyhound/src/cv32e40x_pkg.sv greyhound/src/obi_pkg.sv \
+  greyhound/ip/obi_intf.sv greyhound/ip/obi_mux.sv greyhound/ip/obi_demux.sv \
+  greyhound/ip/obi_err_sbr.sv greyhound/ip/obi_sram_shim.sv \
+  greyhound/ip/fifo_v3.sv greyhound/ip/rr_arb_tree.sv \
+  greyhound/ip/delta_counter.sv greyhound/ip/lzc.sv \
+  greyhound/ip/cv32e40x/*.sv \
+  greyhound/src/greyhound_soc.sv greyhound/src/fabric_extension.sv \
+  greyhound/src/dummy_extension.sv greyhound/src/obi2ahbm_adapter.sv \
+  greyhound/src/cv32e40x_clock_gate.sv \
+  --top greyhound_soc
+
+# --- Phase 3: USB register FE + SCA_PQC coprocessor + integration top ---
+# Read AFTER slang to avoid undriven pass conflict
+read_verilog -sv greyhound/src/cw305_usb_reg_fe.sv
+
+read_verilog -sv -I ../rtl \
+  ../rtl/sca_pqc_pkg.sv \
+  ../rtl/ise/ise_keccak_ops.sv ../rtl/ise/ise_mod_reduce.sv \
+  ../rtl/ise/ise_ntt_butterfly.sv ../rtl/ise/ise_cbd.sv \
+  ../rtl/ise/ise_compress.sv ../rtl/ise/ise_mldsa_ops.sv \
+  ../rtl/ise/ise_mask_ops.sv ../rtl/ise/ise_prng.sv \
+  ../rtl/sca_pqc_coprocessor_top.sv ../rtl/sca_pqc_greyhound_adapter.sv \
+  ../rtl/obi/obi_a2b_b2a_peripheral.sv ../rtl/obi/a2b_core.sv ../rtl/obi/b2a_core.sv \
+  ../rtl/obi/sec_add.sv ../rtl/obi/sec_and.sv ../rtl/obi/sec_ops.sv
+
+read_verilog -sv sca_pqc_cw305_top.sv
+
+# --- Phase 4: Elaborate and check hierarchy ---
+hierarchy -top sca_pqc_cw305_top -check
+
+# --- Phase 5: Xilinx synthesis ---
+synth_xilinx -family xc7 -top sca_pqc_cw305_top -flatten -nodsp
+
+# --- Phase 6: Output ---
+write_json build/sca_pqc_final_v2.json
+tee -q -o build/yosys_final_v2_stats.txt stat

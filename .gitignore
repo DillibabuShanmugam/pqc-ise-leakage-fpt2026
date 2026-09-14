@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.elf
+*.bin
+*.fst
+*.vcd
+*.bit
+sim_b*/
+build*/
+*.log

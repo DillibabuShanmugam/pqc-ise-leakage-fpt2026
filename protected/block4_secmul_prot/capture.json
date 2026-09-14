@@ -1,0 +1,11 @@
+{
+ "block": 4,
+ "name": "secmul_prot",
+ "n": 1000,
+ "samples": 500,
+ "decimate": 1,
+ "offset": 0,
+ "freq": 16000000,
+ "gain": 20,
+ "bit": "../opensource_pqc_cv32e40x_cw305_2026-09-09/integration/build/sca_pqc_cw305.bit"
+}

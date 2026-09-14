@@ -1,0 +1,12 @@
+{
+ "block": 9,
+ "name": "mont_d",
+ "n": 1000,
+ "samples": 500,
+ "decimate": 1,
+ "offset": 0,
+ "freq": 16000000,
+ "gain": 15,
+ "bit": "board/sca_pqc_cw305_ise10_tvla3.bit",
+ "mode": "interleaved"
+}

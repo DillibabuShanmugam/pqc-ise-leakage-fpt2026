@@ -1,0 +1,18 @@
+\begin{tabular}{@{}r@{\hspace{3pt}}l r r r r r r@{}}
+\toprule
+\# & Instruction & $|t|$ sim & $d$ sim & $|t|$ CW305 & $|t|$ pass 2 & $d$ CW305 & $|r|$ \\
+\midrule
+\multicolumn{8}{@{}l}{Secret operand fixed against random} \\
+2 & \texttt{BARRETT\_K} & 45.7 & 2.89 & 41.9 & 41.9 & 2.65 & 0.795 \\
+4 & \texttt{CADDQ} & 24.4 & 1.54 & 20.2 & 20.6 & 1.27 & 0.978 \\
+6 & \texttt{COMPRESS\_1} & 20.9 & 1.32 & 13.6 & 13.3 & 0.86 & 0.776 \\
+7 & \texttt{CBD2\_1} & 16.8 & 1.06 & 19.6 & 20.0 & 1.24 & 0.992 \\
+8 & \texttt{BARRETT\_D} & 5.5 & 0.35 & 19.9 & 18.6 & 1.26 & 0.760 \\
+10 & \texttt{DECOMPOSE} & 6.4 & 0.41 & 18.8 & 20.2 & 1.19 & 0.819 \\
+\multicolumn{8}{@{}l}{Secret constant, public operand fixed against random} \\
+1 & \texttt{MONT\_K} & 26.2 & 1.66 & 38.5 & 36.8 & 2.44 & 0.888 \\
+3 & \texttt{AND\_LATCH} & 32.4 & 2.05 & 7.7 & 8.1 & 0.48 & 0.467 \\
+5 & \texttt{GS\_MUL} & 33.2 & 2.10 & 25.0 & 30.1 & 1.58 & 0.765 \\
+9 & \texttt{MONT\_D\_R64} & 33.0 & 2.09 & 26.3 & 25.6 & 1.66 & 0.995 \\
+\bottomrule
+\end{tabular}
