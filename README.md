@@ -55,6 +55,10 @@ pair in random order. Single-operand instructions vary the secret itself; two-op
 constant and vary the public operand. An unmeasured run on one constant operand precedes every measured run.
 Welch's t per simulated cycle and per CW305 sample; two board passes scored separately.
 
+## Licence
+
+MIT, see `LICENSE`. CV32E40X and the OBI IP under `flow/greyhound/` keep their upstream licences.
+
 ## Citation
 
 If you use this design, flow, traces, or analysis, please cite the FPT 2026 paper:
@@ -75,7 +79,3 @@ If you use this design, flow, traces, or analysis, please cite the FPT 2026 pape
 D. Shanmugam and P. Schaumont, "Fully open-source accelerator for unified and protected ML-KEM-1024 and ML-DSA-44,"
 in Proc. International Conference on Field Programmable Technology (FPT), Honolulu, HI, USA, Dec. 2026, to appear.
 A `CITATION.cff` is included; GitHub's "Cite this repository" button gives the same entry.
-
-## Licence
-
-MIT, see `LICENSE`. CV32E40X and the OBI IP under `flow/greyhound/` keep their upstream licences.
