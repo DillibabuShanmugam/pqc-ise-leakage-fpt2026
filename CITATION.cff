@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite the FPT 2026 paper below."
+title: "pqc-ise-leakage-fpt2026: open-source PQC coprocessor with instruction-level leakage assessment"
+authors:
+  - family-names: Shanmugam
+    given-names: Dillibabu
+  - family-names: Schaumont
+    given-names: Patrick
+repository-code: "https://github.com/DillibabuShanmugam/pqc-ise-leakage-fpt2026"
+license: MIT
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: Shanmugam
+      given-names: Dillibabu
+    - family-names: Schaumont
+      given-names: Patrick
+  title: "Fully Open-Source Accelerator for Unified and Protected ML-KEM-1024 and ML-DSA-44"
+  collection-title: "Proceedings of the International Conference on Field Programmable Technology (FPT)"
+  publisher:
+    name: IEEE
+  year: 2026
+  month: 12
+  notes: "To appear"
