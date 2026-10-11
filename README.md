@@ -72,10 +72,9 @@ If you use this design, flow, traces, or analysis, please cite the FPT 2026 pape
   address   = {Honolulu, HI, USA},
   month     = dec,
   year      = {2026},
-  note      = {To appear},
 }
 ```
 
 D. Shanmugam and P. Schaumont, "Fully open-source accelerator for unified and protected ML-KEM-1024 and ML-DSA-44,"
-in Proc. International Conference on Field Programmable Technology (FPT), Honolulu, HI, USA, Dec. 2026, to appear.
+in Proc. International Conference on Field Programmable Technology (FPT), Honolulu, HI, USA, Dec. 2026.
 A `CITATION.cff` is included; GitHub's "Cite this repository" button gives the same entry.
